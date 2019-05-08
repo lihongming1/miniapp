@@ -7,6 +7,8 @@ import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.alibaba.fastjson.JSON;
 import com.wx.miniapp.controller.vo.LoginParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,7 +19,7 @@ public class AuthorizeController {
     private WxMaUserService wxMaUserService;
 
     @PostMapping("login")
-    public String login(@RequestParam LoginParam loginParam) {
+    public ResponseEntity login(@RequestParam LoginParam loginParam) {
 
         // 临时登录凭证code
         String code = loginParam.getCode();
@@ -36,7 +38,6 @@ public class AuthorizeController {
         try {
             // 获取授权
             result = wxMaUserService.getSessionInfo(code);
-            return JSON.toJSONString(result);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -57,7 +58,7 @@ public class AuthorizeController {
         // cache redis
         cacheRedis(openid, sessionKey, skey);
 
-        return skey;
+        return ResponseEntity.status(HttpStatus.OK).body(skey);
     }
 
     /**
