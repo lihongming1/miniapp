@@ -5,11 +5,9 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.alibaba.fastjson.JSON;
+import com.wx.miniapp.controller.vo.LoginParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/com/wx/authorize")
@@ -18,10 +16,22 @@ public class AuthorizeController {
     @Autowired
     private WxMaUserService wxMaUserService;
 
-    @GetMapping(value = "/login")
-    public String login(@RequestParam String code, @RequestParam String encryptedData, @RequestParam String iv) {
+    @PostMapping("login")
+    public String login(@RequestParam LoginParam loginParam) {
+
+        // 临时登录凭证code
+        String code = loginParam.getCode();
+        // 用户非敏感信息
+        String rawData = loginParam.getRawData();
+        // 签名
+        String signature = loginParam.getSignature();
+        // 用户敏感信息
+        String encryptedData = loginParam.getEncryptedData();
+        // 解密算法的向量
+        String iv = loginParam.getIv();
 
         System.out.println("querySessionKey.code=" + code + ", encryptedData=" + encryptedData + ", iv=" + iv);
+
         WxMaJscode2SessionResult result = null;
         try {
             // 获取授权
