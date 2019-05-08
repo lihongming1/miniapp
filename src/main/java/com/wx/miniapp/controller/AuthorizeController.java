@@ -10,7 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "/com/wx/authorize")
@@ -20,7 +25,7 @@ public class AuthorizeController {
     private WxMaUserService wxMaUserService;
 
     @Autowired
-    RedisTemplate redisTemplate;
+    RedisTemplate<String, String> redisTemplate;
 
     @PostMapping("login")
     public ResponseEntity login(@RequestBody LoginParam loginParam) {
@@ -69,7 +74,8 @@ public class AuthorizeController {
      * @param wxMaUserInfo
      */
     public String insertDB(WxMaJscode2SessionResult session, WxMaUserInfo wxMaUserInfo) {
-        return null;
+        String skey = UUID.randomUUID().toString();
+        return skey;
     }
 
     /**
@@ -80,6 +86,31 @@ public class AuthorizeController {
      * @param skey
      */
     public void cacheRedis(String openid, String sessionKey, String skey) {
+
+        String openid2skey = "WEXIN_USER_OPENID_SKEY";
+        String skey2openid = "WEIXIN_USER_SKEY_OPENID";
+        String skey2sessionKey = "WEIXIN_USER_SKEY_SESSIONKEY";
+
+        // openid -> skey
+        Object skeyObj = redisTemplate.opsForHash().get(openid2skey, openid);
+        String sky = skeyObj == null ? null : skeyObj.toString();
+        if(!StringUtils.isEmpty(sky)){
+            // 删除缓存
+            redisTemplate.opsForHash().delete(openid2skey, openid);
+            redisTemplate.opsForHash().delete(skey2openid, skey);
+            redisTemplate.opsForHash().delete(skey2sessionKey, skey);
+        }
+
+        // openid -> skey
+        redisTemplate.opsForHash().put(openid2skey, openid, skey);
+        redisTemplate.expire(openid2skey, 5, TimeUnit.DAYS); //设置5天过期
+        // skey -> openid
+        redisTemplate.opsForHash().put(skey2openid, skey, openid);
+        redisTemplate.expire(skey2openid, 5, TimeUnit.DAYS); //设置5天过期
+        // skey -> sessionKey
+        redisTemplate.opsForHash().put(skey2sessionKey, skey, sessionKey);
+        redisTemplate.expire(skey2sessionKey, 5, TimeUnit.DAYS); //设置5天过期
+
     }
 
 }
