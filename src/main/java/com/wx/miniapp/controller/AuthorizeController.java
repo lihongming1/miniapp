@@ -18,9 +18,9 @@ public class AuthorizeController {
 
     @GetMapping(value = "/authorize")
     public String querySessionKey(@RequestParam String code) {
-        WxMaJscode2SessionResult result = null;
+        System.out.println("querySessionKey.code=" + code);
         try {
-            result = wxMaUserService.getSessionInfo(code);
+            WxMaJscode2SessionResult result = wxMaUserService.getSessionInfo(code);
             return JSON.toJSONString(result);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -29,3 +29,4 @@ public class AuthorizeController {
     }
 
 }
+
