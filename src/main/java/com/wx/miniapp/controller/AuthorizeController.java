@@ -8,12 +8,14 @@ import com.alibaba.fastjson.JSON;
 import com.wx.miniapp.controller.vo.LoginParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -24,8 +26,9 @@ public class AuthorizeController {
     @Autowired
     private WxMaUserService wxMaUserService;
 
-    @Autowired
-    RedisTemplate<String, String> redisTemplate;
+    @Resource
+    RedisTemplate redisTemplate;
+
 
     @PostMapping("login")
     public ResponseEntity login(@RequestBody LoginParam loginParam) {
@@ -100,6 +103,7 @@ public class AuthorizeController {
             redisTemplate.opsForHash().delete(skey2openid, skey);
             redisTemplate.opsForHash().delete(skey2sessionKey, skey);
         }
+
 
         // openid -> skey
         redisTemplate.opsForHash().put(openid2skey, openid, skey);
