@@ -20,7 +20,6 @@ public class AuthorizeController {
     public String querySessionKey(@RequestParam String code) {
         WxMaJscode2SessionResult result = null;
         try {
-            code = "001gVPdv0RCMnj12Fvbv0KBFdv0gVPdI";
             result = wxMaUserService.getSessionInfo(code);
             return JSON.toJSONString(result);
         } catch (Exception ex) {
