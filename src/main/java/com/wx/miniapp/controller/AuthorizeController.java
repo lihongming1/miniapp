@@ -19,7 +19,7 @@ public class AuthorizeController {
     private WxMaUserService wxMaUserService;
 
     @PostMapping("login")
-    public ResponseEntity login(@RequestParam LoginParam loginParam) {
+    public ResponseEntity login(@RequestBody LoginParam loginParam) {
 
         // 临时登录凭证code
         String code = loginParam.getCode();
@@ -34,26 +34,23 @@ public class AuthorizeController {
 
         System.out.println("querySessionKey.code=" + code + ", encryptedData=" + encryptedData + ", iv=" + iv);
 
-        WxMaJscode2SessionResult result = null;
+        WxMaJscode2SessionResult session = null;
         try {
             // 获取授权
-            result = wxMaUserService.getSessionInfo(code);
+            session = wxMaUserService.getSessionInfo(code);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
-        String openid = result.getOpenid();
+        String openid = session.getOpenid();
         // 私钥
-        String sessionKey = result.getSessionKey();
+        String sessionKey = session.getSessionKey();
 
         // 获取用户
         WxMaUserInfo wxMaUserInfo = wxMaUserService.getUserInfo(sessionKey, encryptedData, iv);
 
-        // 获取手机号
-        WxMaPhoneNumberInfo wxMaPhoneNumberInfo = wxMaUserService.getPhoneNoInfo(sessionKey, encryptedData, iv);
-
         // insert mysql
-        String skey = insertDB(openid, wxMaUserInfo, wxMaPhoneNumberInfo);
+        String skey = insertDB(session, wxMaUserInfo);
 
         // cache redis
         cacheRedis(openid, sessionKey, skey);
@@ -64,11 +61,10 @@ public class AuthorizeController {
     /**
      * 保存数据库
      *
-     * @param openid
+     * @param session
      * @param wxMaUserInfo
-     * @param wxMaPhoneNumberInfo
      */
-    public String insertDB(String openid, WxMaUserInfo wxMaUserInfo, WxMaPhoneNumberInfo wxMaPhoneNumberInfo) {
+    public String insertDB(WxMaJscode2SessionResult session, WxMaUserInfo wxMaUserInfo) {
         return null;
     }
 
