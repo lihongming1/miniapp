@@ -29,6 +29,19 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>com.github.binarywang</groupId>
+			<artifactId>weixin-java-miniapp</artifactId>
+			<version>3.3.8.B</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.58</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
