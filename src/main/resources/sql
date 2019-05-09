@@ -1,0 +1,20 @@
+CREATE TABLE `wx_miniapp_login_user` (
+`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+`openId` varchar(200) NOT NULL DEFAULT '' COMMENT '',
+`nickName` varchar(50) NOT NULL DEFAULT '' COMMENT '昵称',
+`gender` varchar(10) NOT NULL DEFAULT '' COMMENT '性别',
+`language` varchar(50) NOT NULL DEFAULT '' COMMENT '语言',
+`city` varchar(100) NOT NULL DEFAULT '' COMMENT '城市',
+`province` varchar(100) NOT NULL DEFAULT '' COMMENT '省份',
+`country` varchar(100) NOT NULL DEFAULT '' COMMENT '国家',
+`avatarUrl` varchar(100) NOT NULL DEFAULT '' COMMENT '',
+`unionId` varchar(100) NOT NULL DEFAULT '' COMMENT '',
+`sessionKey` varchar(200) NOT NULL DEFAULT '' COMMENT '私钥',
+`phoneNumber` varchar(20) NOT NULL DEFAULT '' COMMENT '',
+`purePhoneNumber` varchar(20) NOT NULL DEFAULT '' COMMENT '',
+`countryCode` varchar(20) NOT NULL DEFAULT '' COMMENT '',
+`status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态',
+`createDate` datetime NOT NULL,
+`updateDate` datetime NOT NULL,
+PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='';
