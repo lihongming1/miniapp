@@ -7,6 +7,7 @@ import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.alibaba.fastjson.JSON;
 import com.wx.miniapp.controller.vo.LoginParam;
 import com.wx.miniapp.controller.vo.LoginResultData;
+import com.wx.miniapp.controller.vo.LoginUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -70,7 +71,15 @@ public class AuthorizeController {
 
         LoginResultData data = new LoginResultData();
         data.setSkey(skey);
-        data.setUserInfo(wxMaUserInfo);
+        LoginUserInfo userInfo = new LoginUserInfo();
+        userInfo.setNickName(wxMaUserInfo.getNickName());
+        userInfo.setGender(wxMaUserInfo.getGender());
+        userInfo.setLanguage(wxMaUserInfo.getLanguage());
+        userInfo.setCity(wxMaUserInfo.getCity());
+        userInfo.setProvince(wxMaUserInfo.getProvince());
+        userInfo.setCountry(wxMaUserInfo.getCountry());
+        userInfo.setAvatarUrl(wxMaUserInfo.getAvatarUrl());
+        data.setUserInfo(userInfo);
 
         return ResponseEntity.status(HttpStatus.OK).body(data);
     }

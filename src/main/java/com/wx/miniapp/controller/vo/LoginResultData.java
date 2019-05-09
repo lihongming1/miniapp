@@ -1,14 +1,12 @@
 package com.wx.miniapp.controller.vo;
 
-import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
-
 import java.io.Serializable;
 
 public class LoginResultData implements Serializable {
 
     private String skey;
 
-    private WxMaUserInfo userInfo;
+    private LoginUserInfo userInfo;
 
     public String getSkey() {
         return skey;
@@ -18,11 +16,11 @@ public class LoginResultData implements Serializable {
         this.skey = skey;
     }
 
-    public WxMaUserInfo getUserInfo() {
+    public LoginUserInfo getUserInfo() {
         return userInfo;
     }
 
-    public void setUserInfo(WxMaUserInfo userInfo) {
+    public void setUserInfo(LoginUserInfo userInfo) {
         this.userInfo = userInfo;
     }
 }
