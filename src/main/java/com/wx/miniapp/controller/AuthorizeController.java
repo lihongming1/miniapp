@@ -2,26 +2,24 @@ package com.wx.miniapp.controller;
 
 import cn.binarywang.wx.miniapp.api.WxMaUserService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
-import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
-import com.alibaba.fastjson.JSON;
 import com.wx.miniapp.business.AuthorizeBusinessService;
 import com.wx.miniapp.controller.vo.LoginParam;
 import com.wx.miniapp.controller.vo.LoginResultData;
 import com.wx.miniapp.controller.vo.LoginUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 登录授权
+ */
 @RestController
 @RequestMapping(value = "/com/wx/authorize")
 public class AuthorizeController {
