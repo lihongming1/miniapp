@@ -38,7 +38,7 @@ public class AuthorizeBusinessService {
         user.setPhoneNumber("");
         user.setPurePhoneNumber("");
         user.setCountryCode("");
-        loginUserService.saveLoginUser(null);
+        loginUserService.saveLoginUser(user);
         return skey;
     }
 
