@@ -5,6 +5,7 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.alibaba.fastjson.JSON;
+import com.wx.miniapp.business.AuthorizeBusinessService;
 import com.wx.miniapp.controller.vo.LoginParam;
 import com.wx.miniapp.controller.vo.LoginResultData;
 import com.wx.miniapp.controller.vo.LoginUserInfo;
@@ -27,6 +28,9 @@ public class AuthorizeController {
 
     @Autowired
     private WxMaUserService wxMaUserService;
+
+    @Autowired
+    private AuthorizeBusinessService authorizeBusinessService;
 
     @Resource
     RedisTemplate redisTemplate;
@@ -64,7 +68,7 @@ public class AuthorizeController {
         WxMaUserInfo wxMaUserInfo = wxMaUserService.getUserInfo(sessionKey, encryptedData, iv);
 
         // insert mysql
-        String skey = insertDB(session, wxMaUserInfo);
+        String skey = authorizeBusinessService.saveLoginUser(session, wxMaUserInfo);
 
         // cache redis
         cacheRedis(openid, sessionKey, skey);
