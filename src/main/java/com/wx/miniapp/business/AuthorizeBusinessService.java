@@ -33,7 +33,7 @@ public class AuthorizeBusinessService {
         user.setProvince(wxMaUserInfo.getProvince());
         user.setCountry(wxMaUserInfo.getCountry());
         user.setAvatarUrl(wxMaUserInfo.getAvatarUrl());
-        user.setUnionId(wxMaUserInfo.getUnionId());
+        user.setUnionId(wxMaUserInfo.getUnionId() == null ? "" : wxMaUserInfo.getUnionId());
         user.setSessionKey(session.getSessionKey());
         user.setPhoneNumber("");
         user.setPurePhoneNumber("");

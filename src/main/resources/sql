@@ -16,5 +16,6 @@ CREATE TABLE `wx_miniapp_login_user` (
 `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态',
 `createDate` datetime NOT NULL,
 `updateDate` datetime NOT NULL,
-PRIMARY KEY (`id`) USING BTREE
+PRIMARY KEY (`id`) USING BTREE,
+KEY `openId_index` (`openId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='';
