@@ -89,17 +89,6 @@ public class AuthorizeController {
     }
 
     /**
-     * 保存数据库
-     *
-     * @param session
-     * @param wxMaUserInfo
-     */
-    public String insertDB(WxMaJscode2SessionResult session, WxMaUserInfo wxMaUserInfo) {
-        String skey = UUID.randomUUID().toString();
-        return skey;
-    }
-
-    /**
      * 缓存数据
      *
      * @param openid
