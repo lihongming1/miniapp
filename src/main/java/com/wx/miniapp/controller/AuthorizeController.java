@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 登录授权
+ * 参考：https://blog.51cto.com/sihai/2145116
  */
 @RestController
 @RequestMapping(value = "/com/wx/authorize")
