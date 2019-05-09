@@ -24,21 +24,28 @@ public class AuthorizeBusinessService {
      */
     public String saveLoginUser(WxMaJscode2SessionResult session, WxMaUserInfo wxMaUserInfo) {
         String skey = UUID.randomUUID().toString();
-        LoginUser user = new LoginUser();
-        user.setOpenId(session.getOpenid());
-        user.setNickName(wxMaUserInfo.getNickName());
-        user.setGender(wxMaUserInfo.getGender());
-        user.setLanguage(wxMaUserInfo.getLanguage());
-        user.setCity(wxMaUserInfo.getCity());
-        user.setProvince(wxMaUserInfo.getProvince());
-        user.setCountry(wxMaUserInfo.getCountry());
-        user.setAvatarUrl(wxMaUserInfo.getAvatarUrl());
-        user.setUnionId(wxMaUserInfo.getUnionId() == null ? "" : wxMaUserInfo.getUnionId());
-        user.setSessionKey(session.getSessionKey());
-        user.setPhoneNumber("");
-        user.setPurePhoneNumber("");
-        user.setCountryCode("");
-        loginUserService.saveLoginUser(user);
+        LoginUser loginUser = loginUserService.queryLoginUserByOpenId(session.getOpenid());
+        if(loginUser == null){
+            // save
+            LoginUser user = new LoginUser();
+            user.setOpenId(session.getOpenid());
+            user.setNickName(wxMaUserInfo.getNickName());
+            user.setGender(wxMaUserInfo.getGender());
+            user.setLanguage(wxMaUserInfo.getLanguage());
+            user.setCity(wxMaUserInfo.getCity());
+            user.setProvince(wxMaUserInfo.getProvince());
+            user.setCountry(wxMaUserInfo.getCountry());
+            user.setAvatarUrl(wxMaUserInfo.getAvatarUrl());
+            user.setUnionId(wxMaUserInfo.getUnionId() == null ? "" : wxMaUserInfo.getUnionId());
+            user.setSessionKey(session.getSessionKey());
+            user.setPhoneNumber("");
+            user.setPurePhoneNumber("");
+            user.setCountryCode("");
+            loginUserService.saveLoginUser(user);
+        }else{
+            // update
+
+        }
         return skey;
     }
 

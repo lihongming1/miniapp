@@ -16,4 +16,9 @@ public class LoginUserServiceImpl implements LoginUserService {
     public int saveLoginUser(LoginUser user) {
         return loginUserDao.saveLoginUser(user);
     }
+
+    @Override
+    public LoginUser queryLoginUserByOpenId(String openId) {
+        return loginUserDao.queryLoginUserByOpenId(openId);
+    }
 }

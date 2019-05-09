@@ -44,4 +44,8 @@
         )
     </insert>
 
+    <select id="queryLoginUserByOpenId" resultType="com.wx.miniapp.dao.model.LoginUser">
+        select * from wx_miniapp_login_user where openId = #{openId}
+    </select>
+
 </mapper>
