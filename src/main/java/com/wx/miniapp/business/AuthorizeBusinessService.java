@@ -44,7 +44,13 @@ public class AuthorizeBusinessService {
             loginUserService.saveLoginUser(user);
         }else{
             // update
-
+            loginUser.setNickName(wxMaUserInfo.getNickName());
+            loginUser.setGender(wxMaUserInfo.getGender());
+            loginUser.setProvince(wxMaUserInfo.getProvince());
+            loginUser.setCountry(wxMaUserInfo.getCountry());
+            loginUser.setAvatarUrl(wxMaUserInfo.getAvatarUrl());
+            loginUser.setUpdateDate(new Date());
+            loginUserService.updateLoginUser(loginUser);
         }
         return skey;
     }

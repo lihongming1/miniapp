@@ -48,4 +48,29 @@
         select * from wx_miniapp_login_user where openId = #{openId}
     </select>
 
+    <update id="updateLoginUser" parameterType="com.wx.miniapp.dao.model.LoginUser">
+        update wx_miniapp_login_user
+        <set >
+            <if test="nickName != null and nickName.length() > 0" >
+                nickName = #{nickName},
+            </if>
+            <if test="gender != null and gender.length() > 0" >
+                gender = #{gender},
+            </if>
+            <if test="province != null and province.length() > 0" >
+                province = #{province},
+            </if>
+            <if test="country != null and country.length() > 0" >
+                country = #{country},
+            </if>
+            <if test="avatarUrl != null and avatarUrl.length() > 0" >
+                avatarUrl = #{avatarUrl},
+            </if>
+            <if test="updateDate != null" >
+                updateDate = #{updateDate},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
 </mapper>

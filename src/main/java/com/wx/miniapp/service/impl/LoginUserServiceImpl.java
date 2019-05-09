@@ -18,6 +18,11 @@ public class LoginUserServiceImpl implements LoginUserService {
     }
 
     @Override
+    public int updateLoginUser(LoginUser user) {
+        return loginUserDao.updateLoginUser(user);
+    }
+
+    @Override
     public LoginUser queryLoginUserByOpenId(String openId) {
         return loginUserDao.queryLoginUserByOpenId(openId);
     }

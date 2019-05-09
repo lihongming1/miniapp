@@ -6,6 +6,8 @@ public interface LoginUserService {
 
     int saveLoginUser(LoginUser user);
 
+    int updateLoginUser(LoginUser user);
+
     LoginUser queryLoginUserByOpenId(String openId);
 
 }

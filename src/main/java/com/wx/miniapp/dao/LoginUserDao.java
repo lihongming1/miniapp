@@ -7,6 +7,8 @@ public interface LoginUserDao {
 
     int saveLoginUser(LoginUser user);
 
+    int updateLoginUser(LoginUser user);
+
     LoginUser queryLoginUserByOpenId(@Param("openId") String openId);
 
 }
