@@ -6,6 +6,7 @@ import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.alibaba.fastjson.JSON;
 import com.wx.miniapp.controller.vo.LoginParam;
+import com.wx.miniapp.controller.vo.LoginResultData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -67,7 +68,11 @@ public class AuthorizeController {
         // cache redis
         cacheRedis(openid, sessionKey, skey);
 
-        return ResponseEntity.status(HttpStatus.OK).body(skey);
+        LoginResultData data = new LoginResultData();
+        data.setSkey(skey);
+        data.setUserInfo(wxMaUserInfo);
+
+        return ResponseEntity.status(HttpStatus.OK).body(data);
     }
 
     /**
