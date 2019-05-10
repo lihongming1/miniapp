@@ -35,18 +35,19 @@ public class MessageController {
     private RedisTemplate redisTemplate;
 
     @RequestMapping("/sendMsg")
-    public ResponseEntity sendMsg(@RequestParam String skey){
+    public ResponseEntity sendMsg(@RequestParam String skey, @RequestParam String formId){
 
         String openid2skey = applicationConfig.openid2skey;
         String skey2openid = applicationConfig.skey2openid;
         String skey2sessionKey = applicationConfig.skey2sessionKey;
 
-
+        Object openidobj = redisTemplate.opsForHash().get(skey2openid, skey);
+        String openid = openidobj == null ? "" : openidobj.toString();
 
         WxMaTemplateMessage templateMessage = new WxMaTemplateMessage();
-        templateMessage.setToUser(applicationConfig.appid);
+        templateMessage.setToUser(openid);
         templateMessage.setTemplateId("nH4kDo-gSSrUgd7dljmJr9eGNZq9R-C-ySM3I4ByEbQ");
-        templateMessage.setFormId("the formId is a mock one");
+        templateMessage.setFormId(formId);
         List<WxMaTemplateData> data = new ArrayList<>();
         WxMaTemplateData wxMaTemplateData = new WxMaTemplateData();
         wxMaTemplateData.setName("keyword1");
