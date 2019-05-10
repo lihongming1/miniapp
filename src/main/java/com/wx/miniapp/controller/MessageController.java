@@ -37,6 +37,10 @@ public class MessageController {
     @RequestMapping("/sendMsg")
     public ResponseEntity sendMsg(@RequestParam String skey, @RequestParam String formId){
 
+        if("the formId is a mock one".equals(formId)){
+            return ResponseEntity.status(-1).build();
+        }
+
         String openid2skey = applicationConfig.openid2skey;
         String skey2openid = applicationConfig.skey2openid;
         String skey2sessionKey = applicationConfig.skey2sessionKey;
