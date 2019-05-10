@@ -4,6 +4,7 @@ import cn.binarywang.wx.miniapp.api.WxMaUserService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.wx.miniapp.business.AuthorizeBusinessService;
+import com.wx.miniapp.config.ApplicationConfig;
 import com.wx.miniapp.controller.vo.LoginParam;
 import com.wx.miniapp.controller.vo.LoginResultData;
 import com.wx.miniapp.controller.vo.LoginUserInfo;
@@ -32,7 +33,10 @@ public class AuthorizeController {
     private AuthorizeBusinessService authorizeBusinessService;
 
     @Resource
-    RedisTemplate redisTemplate;
+    private RedisTemplate redisTemplate;
+
+    @Autowired
+    private ApplicationConfig applicationConfig;
 
 
     @PostMapping("login")
@@ -96,9 +100,9 @@ public class AuthorizeController {
      */
     public void cacheRedis(String openid, String sessionKey, String skey) {
 
-        String openid2skey = "WEXIN_USER_OPENID_SKEY";
-        String skey2openid = "WEIXIN_USER_SKEY_OPENID";
-        String skey2sessionKey = "WEIXIN_USER_SKEY_SESSIONKEY";
+        String openid2skey = applicationConfig.openid2skey;
+        String skey2openid = applicationConfig.skey2openid;
+        String skey2sessionKey = applicationConfig.skey2sessionKey;
 
         // openid -> skey
         Object skeyObj = redisTemplate.opsForHash().get(openid2skey, openid);

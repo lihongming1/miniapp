@@ -12,6 +12,14 @@ public class ApplicationConfig {
     @Value("${wx.miniapp.secret}")
     public String secret;
 
+    @Value("${login.redis.openid2skey}")
+    public String openid2skey;
+
+    @Value("${login.redis.skey2openid}")
+    public String skey2openid;
+
+    @Value("${login.redis.skey2sessionKey}")
+    public String skey2sessionKey;
 
 
 }
