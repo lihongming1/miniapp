@@ -7,6 +7,8 @@ import cn.binarywang.wx.miniapp.api.impl.WxMaMsgServiceImpl;
 import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
 import cn.binarywang.wx.miniapp.api.impl.WxMaUserServiceImpl;
 import cn.binarywang.wx.miniapp.config.WxMaInMemoryConfig;
+import com.github.binarywang.wxpay.service.WxPayService;
+import com.github.binarywang.wxpay.service.impl.WxPayServiceImpl;
 import com.wx.miniapp.config.ApplicationConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +19,12 @@ public class WxMiniappConfig {
 
     @Autowired
     private ApplicationConfig applicationConfig;
+
+    @Bean
+    public WxPayService wxPayService(){
+        WxPayService wxPayService = new WxPayServiceImpl();
+        return wxPayService;
+    }
 
     @Bean
     public WxMaService wxMaService() {
