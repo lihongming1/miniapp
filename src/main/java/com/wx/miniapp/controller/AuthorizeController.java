@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -70,8 +71,11 @@ public class AuthorizeController {
         // 获取用户
         WxMaUserInfo wxMaUserInfo = wxMaUserService.getUserInfo(sessionKey, encryptedData, iv);
 
+        // 生产skey
+        String skey = UUID.randomUUID().toString();
+
         // insert mysql
-        String skey = authorizeBusinessService.saveLoginUser(session, wxMaUserInfo);
+//        authorizeBusinessService.saveLoginUser(session, wxMaUserInfo);
 
         // cache redis
         cacheRedis(openid, sessionKey, skey);

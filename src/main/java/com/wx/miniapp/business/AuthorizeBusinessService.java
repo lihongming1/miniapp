@@ -22,8 +22,7 @@ public class AuthorizeBusinessService {
      * @param session
      * @param wxMaUserInfo
      */
-    public String saveLoginUser(WxMaJscode2SessionResult session, WxMaUserInfo wxMaUserInfo) {
-        String skey = UUID.randomUUID().toString();
+    public int saveLoginUser(WxMaJscode2SessionResult session, WxMaUserInfo wxMaUserInfo) {
         LoginUser loginUser = loginUserService.queryLoginUserByOpenId(session.getOpenid());
         if(loginUser == null){
             // save
@@ -52,7 +51,7 @@ public class AuthorizeBusinessService {
             loginUser.setUpdateDate(new Date());
             loginUserService.updateLoginUser(loginUser);
         }
-        return skey;
+        return 0;
     }
 
 }
