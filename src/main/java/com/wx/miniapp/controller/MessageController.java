@@ -21,6 +21,7 @@ import java.util.List;
 
 /**
  * 消息模版
+ * 参考：https://www.jianshu.com/p/4d115b57b926
  */
 @RestController
 @RequestMapping(value = "/com/wx/message")
@@ -79,7 +80,7 @@ public class MessageController {
     public ResponseEntity uniformSend(@RequestParam String skey, @RequestParam String formId){
 
         if("the formId is a mock one".equals(formId)){
-            return ResponseEntity.status(-1).build();
+            return ResponseEntity.status(-1).body("模拟器中运行!");
         }
 
         String skey2openid = applicationConfig.skey2openid;
