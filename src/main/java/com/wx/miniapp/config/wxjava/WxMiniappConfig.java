@@ -7,6 +7,7 @@ import cn.binarywang.wx.miniapp.api.impl.WxMaMsgServiceImpl;
 import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
 import cn.binarywang.wx.miniapp.api.impl.WxMaUserServiceImpl;
 import cn.binarywang.wx.miniapp.config.WxMaInMemoryConfig;
+import com.github.binarywang.wxpay.config.WxPayConfig;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.github.binarywang.wxpay.service.impl.WxPayServiceImpl;
 import com.wx.miniapp.config.ApplicationConfig;
@@ -19,6 +20,14 @@ public class WxMiniappConfig {
 
     @Autowired
     private ApplicationConfig applicationConfig;
+
+    public WxPayConfig wxPayConfig(){
+        WxPayConfig wxPayConfig = new WxPayConfig();
+        wxPayConfig.setAppId(applicationConfig.appid);
+        wxPayConfig.setMchId("");
+        wxPayConfig.setSignType("");
+        return wxPayConfig;
+    }
 
     @Bean
     public WxPayService wxPayService(){
