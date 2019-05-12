@@ -3,6 +3,7 @@ package com.wx.miniapp.controller;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
 import com.github.binarywang.wxpay.service.WxPayService;
+import com.wx.miniapp.common.util.SnowflakeIdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +21,16 @@ public class PayController {
     @Autowired
     private WxPayService wxPayService;
 
+    @Autowired
+    private SnowflakeIdWorker snowflakeIdWorker;
+
     @PostMapping("unifiedOrder")
     public void unifiedOrder(){
+
+        long globalUniqueId = snowflakeIdWorker.nextId();
+
+        System.out.println(globalUniqueId);
+
         WxPayUnifiedOrderRequest request = null;
         try{
             // 设备号
