@@ -9,10 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 /**
  * 支付
+ * 参考：https://blog.csdn.net/qq_37105358/article/details/81285779
  */
 @RestController
 @RequestMapping(value = "/com/wx/pay")
