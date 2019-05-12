@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 支付
  * 参考：https://blog.csdn.net/qq_37105358/article/details/81285779
+ *      https://developers.weixin.qq.com/miniprogram/dev/api/wx.requestPayment.html
  */
 @RestController
 @RequestMapping(value = "/com/wx/pay")
