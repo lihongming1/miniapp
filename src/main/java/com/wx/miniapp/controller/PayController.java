@@ -4,6 +4,7 @@ import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
 import com.github.binarywang.wxpay.service.WxPayService;
+import com.github.binarywang.wxpay.util.SignUtils;
 import com.wx.miniapp.common.util.SnowflakeIdWorker;
 import com.wx.miniapp.config.ApplicationConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 支付
@@ -77,13 +80,10 @@ public class PayController {
             request.setOpenid(openid);
             // 商品ID
             request.setProductId(productId);
-
             // 设备号
             request.setDeviceInfo("");
             // 随机字符串
             request.setNonceStr("");
-            // 签名
-            request.setSign("");
             // 商品描述
             request.setBody("商品描述test");
             // 商品详情
@@ -110,6 +110,14 @@ public class PayController {
             request.setLimitPay("no_credit");
             // 场景信息
             request.setSceneInfo("");
+
+            // 密钥
+            String signKey = "";
+            // 参数
+            Map<String, String> params = new HashMap<>();
+            String sign = SignUtils.createSign(params, "MD5",signKey,null);
+            // 签名
+            request.setSign("");
 
 
             WxPayUnifiedOrderResult orderResult = wxPayService.unifiedOrder(request);
