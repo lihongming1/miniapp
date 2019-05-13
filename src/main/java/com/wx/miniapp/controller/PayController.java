@@ -1,5 +1,6 @@
 package com.wx.miniapp.controller;
 
+import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
 import com.github.binarywang.wxpay.service.WxPayService;
@@ -9,10 +10,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.PrintWriter;
+
 /**
  * 支付
- * 参考：https://blog.csdn.net/qq_37105358/article/details/81285779
- *      https://developers.weixin.qq.com/miniprogram/dev/api/wx.requestPayment.html
+ * 参考：
+ * https://blog.csdn.net/qq_37105358/article/details/81285779
+ * https://developers.weixin.qq.com/miniprogram/dev/api/wx.requestPayment.html
+ * https://www.cnblogs.com/yi1036943655/p/7211275.html
  */
 @RestController
 @RequestMapping(value = "/com/wx/pay")
@@ -24,15 +32,18 @@ public class PayController {
     @Autowired
     private SnowflakeIdWorker snowflakeIdWorker;
 
-    @PostMapping("unifiedOrder")
-    public void unifiedOrder(){
+    /**
+     * 预支付
+     */
+    @PostMapping("payment")
+    public void payment() {
 
         long globalUniqueId = snowflakeIdWorker.nextId();
 
         System.out.println(globalUniqueId);
 
         WxPayUnifiedOrderRequest request = null;
-        try{
+        try {
             // 设备号
             request.setDeviceInfo("");
             // 随机字符串
@@ -72,8 +83,66 @@ public class PayController {
             // 场景信息
             request.setSceneInfo("");
             WxPayUnifiedOrderResult orderResult = wxPayService.unifiedOrder(request);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    /**
+     * 支付回调
+     *
+     * @param request
+     * @param response
+     */
+    public void payCallback(HttpServletRequest request, HttpServletResponse response) {
+        String inputLine = "";
+        String notityXml = "";
+        BufferedReader reader = null;
+        PrintWriter writer = null;
+        try {
+            reader = request.getReader();
+            writer = response.getWriter();
+
+            while ((inputLine = reader.readLine()) != null) {
+                notityXml += inputLine;
+            }
+
+            WxPayOrderNotifyResult wxPayOrderNotifyResult = wxPayService.parseOrderNotifyResult(notityXml);
+            if ("SUCCESS".equals(wxPayOrderNotifyResult.getResultCode())) {
+                // 商户订单号
+                String outTradeNo = wxPayOrderNotifyResult.getOutTradeNo();
+                // 查询数据库
+                // 修改订单状态-已支付
+                // 查询是否更新成功
+                // 返回微信段成功， 否则会一直询问 咱们服务器 是否回调成功
+                StringBuffer buffer = new StringBuffer();
+                buffer.append("<xml>");
+                buffer.append("<return_code>SUCCESS</return_code>");
+                buffer.append("<return_msg>OK</return_msg>");
+                buffer.append("</xml>");
+                //返回
+                writer.print(buffer.toString());
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                    ;
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+            if (writer != null) {
+                try {
+                    writer.close();
+                    ;
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
     }
 
