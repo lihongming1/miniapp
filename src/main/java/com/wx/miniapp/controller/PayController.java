@@ -112,13 +112,12 @@ public class PayController {
             request.setSceneInfo("");
 
             // 密钥
-            String signKey = "";
+            String signKey = applicationConfig.signKey;
             // 参数
-            Map<String, String> params = new HashMap<>();
-            String sign = SignUtils.createSign(params, "MD5",signKey,null);
+            Map<String, String> params = SignUtils.xmlBean2Map(request);
+            String sign = SignUtils.createSign(params, "MD5", signKey, null);
             // 签名
-            request.setSign("");
-
+            request.setSign(sign);
 
             WxPayUnifiedOrderResult orderResult = wxPayService.unifiedOrder(request);
         } catch (Exception ex) {
@@ -147,19 +146,24 @@ public class PayController {
 
             WxPayOrderNotifyResult wxPayOrderNotifyResult = wxPayService.parseOrderNotifyResult(notityXml);
             if ("SUCCESS".equals(wxPayOrderNotifyResult.getResultCode())) {
-                // 商户订单号
-                String outTradeNo = wxPayOrderNotifyResult.getOutTradeNo();
-                // 查询数据库
-                // 修改订单状态-已支付
-                // 查询是否更新成功
-                // 返回微信段成功， 否则会一直询问 咱们服务器 是否回调成功
-                StringBuffer buffer = new StringBuffer();
-                buffer.append("<xml>");
-                buffer.append("<return_code>SUCCESS</return_code>");
-                buffer.append("<return_msg>OK</return_msg>");
-                buffer.append("</xml>");
-                //返回
-                writer.print(buffer.toString());
+                // 验证签名是否正确
+                Map<String, String> params = wxPayOrderNotifyResult.toMap();
+                boolean check = SignUtils.checkSign(params, "MD5", null);
+                if (check) {
+                    // 商户订单号
+                    String outTradeNo = wxPayOrderNotifyResult.getOutTradeNo();
+                    // 查询数据库
+                    // 修改订单状态-已支付
+                    // 查询是否更新成功
+                    // 返回微信段成功， 否则会一直询问 咱们服务器 是否回调成功
+                    StringBuffer buffer = new StringBuffer();
+                    buffer.append("<xml>");
+                    buffer.append("<return_code>SUCCESS</return_code>");
+                    buffer.append("<return_msg>OK</return_msg>");
+                    buffer.append("</xml>");
+                    //返回
+                    writer.print(buffer.toString());
+                }
             }
 
         } catch (Exception ex) {
