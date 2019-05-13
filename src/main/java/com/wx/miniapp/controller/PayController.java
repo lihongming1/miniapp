@@ -116,9 +116,11 @@ public class PayController {
 
             // 密钥
             String signKey = applicationConfig.signKey;
+            // 签名类型
+            String signType = applicationConfig.signType;
             // 参数
             Map<String, String> params = SignUtils.xmlBean2Map(request);
-            String sign = SignUtils.createSign(params, "MD5", signKey, null);
+            String sign = SignUtils.createSign(params, signType, signKey, null);
             // 签名
             request.setSign(sign);
 
@@ -149,9 +151,11 @@ public class PayController {
 
             WxPayOrderNotifyResult wxPayOrderNotifyResult = wxPayService.parseOrderNotifyResult(notityXml);
             if ("SUCCESS".equals(wxPayOrderNotifyResult.getResultCode())) {
-                // 验证签名是否正确
                 Map<String, String> params = wxPayOrderNotifyResult.toMap();
-                boolean check = SignUtils.checkSign(params, "MD5", null);
+                // 签名类型
+                String signType = applicationConfig.signType;
+                // 校验签名是否正确
+                boolean check = SignUtils.checkSign(params, signType, null);
                 if (check) {
                     // 商户订单号
                     String outTradeNo = wxPayOrderNotifyResult.getOutTradeNo();
