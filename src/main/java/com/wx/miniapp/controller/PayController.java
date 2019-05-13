@@ -71,8 +71,6 @@ public class PayController {
 
         long globalUniqueId = snowflakeIdWorker.nextId();
 
-        System.out.println(globalUniqueId);
-
         WxPayUnifiedOrderRequest request = new WxPayUnifiedOrderRequest();
         try {
 
@@ -120,9 +118,11 @@ public class PayController {
             Map<String, String> data = new HashMap<>();
             data.put("timeStamp", System.currentTimeMillis()+"");
             data.put("nonceStr", UUID.randomUUID().toString().replaceAll("-", ""));
-            data.put("package", orderResult.getPrepayId());
+            data.put("package", "prepay_id="+orderResult.getPrepayId());
             data.put("signType", "MD5");
             data.put("paySign", orderResult.getSign());
+
+            System.out.println(JSON.toJSONString(data));
 
             return ResponseEntity.status(HttpStatus.OK).body(data);
 
