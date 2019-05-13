@@ -25,7 +25,9 @@ public class WxMiniappConfig {
     public WxPayConfig wxPayConfig(){
         WxPayConfig wxPayConfig = new WxPayConfig();
         wxPayConfig.setAppId(applicationConfig.appid);
+        wxPayConfig.setSubAppId(applicationConfig.appid);
         wxPayConfig.setMchId(applicationConfig.mchId);
+        wxPayConfig.setSubMchId(applicationConfig.mchId);
         wxPayConfig.setSignType(applicationConfig.signType);
         wxPayConfig.setNotifyUrl(applicationConfig.notifyUrl);
         return wxPayConfig;
@@ -34,6 +36,8 @@ public class WxMiniappConfig {
     @Bean
     public WxPayService wxPayService(){
         WxPayService wxPayService = new WxPayServiceImpl();
+        WxPayConfig wxPayConfig = wxPayConfig();
+        wxPayService.setConfig(wxPayConfig);
         return wxPayService;
     }
 

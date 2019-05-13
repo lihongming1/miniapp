@@ -58,13 +58,14 @@ public class PayController {
      * 预支付
      */
     @GetMapping("/payment")
-    public ResponseEntity payment(@RequestParam String skey, @RequestParam String productId) {
+    public ResponseEntity payment(@RequestParam String skey, @RequestParam String formId, @RequestParam String productId) {
 
         String skey2openid = applicationConfig.skey2openid;
         Object openidObj = redisTemplate.opsForHash().get(skey2openid, skey);
         String openid = openidObj == null ? "" : openidObj.toString();
         if (StringUtils.isEmpty(openid)) {
             // 重新登陆
+            return ResponseEntity.status(-1).build();
         }
         // 通过openid查询用户记录
         // 通过productId查询商品记录
@@ -73,7 +74,7 @@ public class PayController {
 
         System.out.println(globalUniqueId);
 
-        WxPayUnifiedOrderRequest request = null;
+        WxPayUnifiedOrderRequest request = new WxPayUnifiedOrderRequest();
         try {
 
             // 用户标识
