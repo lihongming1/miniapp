@@ -95,7 +95,7 @@ public class PayController {
             // 币种
             request.setFeeType("CNY");
             // 金额
-            request.setTotalFee(100);
+            request.setTotalFee(10);
             // 终端IP
             request.setSpbillCreateIp(ipStr);
             // 交易起始时间
