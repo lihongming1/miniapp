@@ -90,7 +90,7 @@ public class PayController {
             // 商品描述
             request.setBody("商品描述test");
             // 商品详情
-//            request.setDetail("商品详情test");
+            request.setDetail("");
             // 附加数据
             request.setAttach("");
             // 商户订单号
