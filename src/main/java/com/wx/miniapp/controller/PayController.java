@@ -24,6 +24,7 @@ import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * 支付
@@ -51,6 +52,8 @@ public class PayController {
     @Autowired
     private PayBusinessService payBusinessService;
 
+    public static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+
     /**
      * 预支付
      */
@@ -73,14 +76,6 @@ public class PayController {
         WxPayUnifiedOrderRequest request = null;
         try {
 
-            // 用户 商品 => 订单 => 支付 => 回调
-
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-            String dateStr = sdf.format(new Date());
-
-            InetAddress addr = InetAddress.getLocalHost();
-            String ipStr = addr.getHostAddress();
-
             // 用户标识
             request.setOpenid(openid);
             // 商品ID
@@ -88,7 +83,7 @@ public class PayController {
             // 设备号
             request.setDeviceInfo("");
             // 随机字符串
-            request.setNonceStr("");
+            request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
             // 商品描述
             request.setBody("商品描述test");
             // 商品详情
@@ -100,13 +95,15 @@ public class PayController {
             // 币种
             request.setFeeType("CNY");
             // 金额
-            request.setTotalFee(10);
+            request.setTotalFee(1);
             // 终端IP
+            InetAddress addr = InetAddress.getLocalHost();
+            String ipStr = addr.getHostAddress();
             request.setSpbillCreateIp(ipStr);
             // 交易起始时间
-            request.setTimeStart(dateStr);
+            request.setTimeStart(sdf.format(new Date()));
             // 交易结束时间
-            request.setTimeExpire(dateStr);
+            request.setTimeExpire(sdf.format(new Date()));
             // 订单优惠标记
             request.setGoodsTag("");
             // 交易类型
