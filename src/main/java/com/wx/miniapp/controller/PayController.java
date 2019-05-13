@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
@@ -104,8 +105,10 @@ public class PayController {
             request.setSpbillCreateIp(ipStr);
             // 交易起始时间
             request.setTimeStart(sdf.format(new Date()));
-            // 交易结束时间
-            request.setTimeExpire(sdf.format(new Date()));
+            // 交易结束时间+30M
+            Calendar nowTime = Calendar.getInstance();
+            nowTime.add(Calendar.MINUTE, 30);
+            request.setTimeExpire(sdf.format(nowTime.getTime()));
             // 订单优惠标记
             request.setGoodsTag("");
             // 交易类型
