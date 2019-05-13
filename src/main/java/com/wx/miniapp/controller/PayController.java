@@ -1,5 +1,6 @@
 package com.wx.miniapp.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
@@ -88,7 +89,7 @@ public class PayController {
             // 商品描述
             request.setBody("商品描述test");
             // 商品详情
-            request.setDetail("商品详情test");
+//            request.setDetail("商品详情test");
             // 附加数据
             request.setAttach("");
             // 商户订单号
@@ -113,16 +114,6 @@ public class PayController {
             request.setLimitPay("no_credit");
             // 场景信息
             request.setSceneInfo("");
-
-            // 密钥
-            String signKey = applicationConfig.signKey;
-            // 签名类型
-            String signType = applicationConfig.signType;
-            // 参数
-            Map<String, String> params = SignUtils.xmlBean2Map(request);
-            String sign = SignUtils.createSign(params, signType, signKey, null);
-            // 签名
-            request.setSign(sign);
 
             WxPayUnifiedOrderResult orderResult = wxPayService.unifiedOrder(request);
             Map<String, String> orderResultMap = orderResult.toMap();
