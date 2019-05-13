@@ -140,6 +140,7 @@ public class PayController {
      * @param request
      * @param response
      */
+    @GetMapping("/payCallback")
     public void payCallback(HttpServletRequest request, HttpServletResponse response) {
         String inputLine = "";
         String notityXml = "";
