@@ -21,6 +21,7 @@ public class WxMiniappConfig {
     @Autowired
     private ApplicationConfig applicationConfig;
 
+    @Bean
     public WxPayConfig wxPayConfig(){
         WxPayConfig wxPayConfig = new WxPayConfig();
         wxPayConfig.setAppId(applicationConfig.appid);
