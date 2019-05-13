@@ -5,6 +5,7 @@ import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.github.binarywang.wxpay.util.SignUtils;
+import com.wx.miniapp.business.PayBusinessService;
 import com.wx.miniapp.common.util.SnowflakeIdWorker;
 import com.wx.miniapp.config.ApplicationConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,9 @@ public class PayController {
 
     @Resource
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private PayBusinessService payBusinessService;
 
     /**
      * 预支付
@@ -152,17 +156,18 @@ public class PayController {
                 if (check) {
                     // 商户订单号
                     String outTradeNo = wxPayOrderNotifyResult.getOutTradeNo();
-                    // 查询数据库
-                    // 修改订单状态-已支付
-                    // 查询是否更新成功
-                    // 返回微信段成功， 否则会一直询问 咱们服务器 是否回调成功
-                    StringBuffer buffer = new StringBuffer();
-                    buffer.append("<xml>");
-                    buffer.append("<return_code>SUCCESS</return_code>");
-                    buffer.append("<return_msg>OK</return_msg>");
-                    buffer.append("</xml>");
-                    //返回
-                    writer.print(buffer.toString());
+                    // 更新支付状态
+                    boolean callbackResult = payBusinessService.payCallback(outTradeNo);
+                    if (callbackResult) {
+                        // 返回微信段成功， 否则会一直询问 咱们服务器 是否回调成功
+                        StringBuffer buffer = new StringBuffer();
+                        buffer.append("<xml>");
+                        buffer.append("<return_code>SUCCESS</return_code>");
+                        buffer.append("<return_msg>OK</return_msg>");
+                        buffer.append("</xml>");
+                        //返回
+                        writer.print(buffer.toString());
+                    }
                 }
             }
 
