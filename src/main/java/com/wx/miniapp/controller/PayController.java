@@ -177,7 +177,6 @@ public class PayController {
             if (reader != null) {
                 try {
                     reader.close();
-                    ;
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
