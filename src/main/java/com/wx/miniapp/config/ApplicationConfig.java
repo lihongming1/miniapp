@@ -21,5 +21,15 @@ public class ApplicationConfig {
     @Value("${login.redis.skey2sessionKey}")
     public String skey2sessionKey;
 
+    @Value("${wx.pay.mchId}")
+    public String mchId;
+
+    @Value("${wx.pay.signType}")
+    public String signType;
+
+    @Value("${wx.pay.notifyUrl}")
+    public String notifyUrl;
+
+
 
 }

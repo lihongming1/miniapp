@@ -24,8 +24,9 @@ public class WxMiniappConfig {
     public WxPayConfig wxPayConfig(){
         WxPayConfig wxPayConfig = new WxPayConfig();
         wxPayConfig.setAppId(applicationConfig.appid);
-        wxPayConfig.setMchId("");
-        wxPayConfig.setSignType("");
+        wxPayConfig.setMchId(applicationConfig.mchId);
+        wxPayConfig.setSignType(applicationConfig.signType);
+        wxPayConfig.setNotifyUrl(applicationConfig.notifyUrl);
         return wxPayConfig;
     }
 
