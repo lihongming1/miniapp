@@ -10,6 +10,8 @@ import com.wx.miniapp.common.util.SnowflakeIdWorker;
 import com.wx.miniapp.config.ApplicationConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,7 +55,7 @@ public class PayController {
      * 预支付
      */
     @GetMapping("/payment")
-    public void payment(@RequestParam String skey, @RequestParam String productId) {
+    public ResponseEntity payment(@RequestParam String skey, @RequestParam String productId) {
 
         String skey2openid = applicationConfig.skey2openid;
         Object openidObj = redisTemplate.opsForHash().get(skey2openid, skey);
@@ -125,9 +127,14 @@ public class PayController {
             request.setSign(sign);
 
             WxPayUnifiedOrderResult orderResult = wxPayService.unifiedOrder(request);
+            Map<String, String> orderResultMap = orderResult.toMap();
+
+            return ResponseEntity.status(HttpStatus.OK).body(orderResultMap);
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        return ResponseEntity.status(-1).build();
     }
 
     /**
