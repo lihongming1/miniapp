@@ -23,10 +23,7 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 支付
@@ -119,9 +116,15 @@ public class PayController {
             request.setSceneInfo("");
 
             WxPayUnifiedOrderResult orderResult = wxPayService.unifiedOrder(request);
-            Map<String, String> orderResultMap = orderResult.toMap();
 
-            return ResponseEntity.status(HttpStatus.OK).body(orderResultMap);
+            Map<String, String> data = new HashMap<>();
+            data.put("timeStamp", System.currentTimeMillis()+"");
+            data.put("nonceStr", UUID.randomUUID().toString().replaceAll("-", ""));
+            data.put("package", orderResult.getPrepayId());
+            data.put("signType", "MD5");
+            data.put("paySign", orderResult.getSign());
+
+            return ResponseEntity.status(HttpStatus.OK).body(data);
 
         } catch (Exception ex) {
             ex.printStackTrace();
