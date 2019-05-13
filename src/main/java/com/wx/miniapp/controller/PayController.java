@@ -115,16 +115,18 @@ public class PayController {
 
             WxPayUnifiedOrderResult orderResult = wxPayService.unifiedOrder(request);
 
-            Map<String, String> data = new HashMap<>();
-            data.put("timeStamp", System.currentTimeMillis()+"");
-            data.put("nonceStr", UUID.randomUUID().toString().replaceAll("-", ""));
-            data.put("package", "prepay_id="+orderResult.getPrepayId());
-            data.put("signType", "MD5");
-            data.put("paySign", orderResult.getSign());
-
-            System.out.println(JSON.toJSONString(data));
-
-            return ResponseEntity.status(HttpStatus.OK).body(data);
+            if ("SUCCESS".equals(orderResult.getReturnCode()) && orderResult.getReturnCode().equals(orderResult.getResultCode())) {
+                // 二次签名
+                Map<String, String> data = new HashMap<>();
+                data.put("appId", applicationConfig.appid);
+                data.put("timeStamp", System.currentTimeMillis() / 1000 + "");
+                data.put("nonceStr", UUID.randomUUID().toString().replaceAll("-", ""));
+                data.put("package", "prepay_id=" + orderResult.getPrepayId());
+                data.put("signType", "MD5");
+                String sign = SignUtils.createSign(data, "MD5", applicationConfig.signKey, null);
+                data.put("paySign", sign);
+                return ResponseEntity.status(HttpStatus.OK).body(data);
+            }
 
         } catch (Exception ex) {
             ex.printStackTrace();
