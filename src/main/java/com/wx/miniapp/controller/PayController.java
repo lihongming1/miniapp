@@ -5,15 +5,20 @@ import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.wx.miniapp.common.util.SnowflakeIdWorker;
+import com.wx.miniapp.config.ApplicationConfig;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 支付
@@ -32,11 +37,26 @@ public class PayController {
     @Autowired
     private SnowflakeIdWorker snowflakeIdWorker;
 
+    @Autowired
+    private ApplicationConfig applicationConfig;
+
+    @Resource
+    private RedisTemplate redisTemplate;
+
     /**
      * 预支付
      */
-    @PostMapping("payment")
-    public void payment() {
+    @GetMapping("/payment")
+    public void payment(@RequestParam String skey, @RequestParam String productId) {
+
+        String skey2openid = applicationConfig.skey2openid;
+        Object openidObj = redisTemplate.opsForHash().get(skey2openid, skey);
+        String openid = openidObj == null ? "" : openidObj.toString();
+        if (StringUtils.isEmpty(openid)) {
+            // 重新登陆
+        }
+        // 通过openid查询用户记录
+        // 通过productId查询商品记录
 
         long globalUniqueId = snowflakeIdWorker.nextId();
 
@@ -44,6 +64,20 @@ public class PayController {
 
         WxPayUnifiedOrderRequest request = null;
         try {
+
+            // 用户 商品 => 订单 => 支付 => 回调
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            String dateStr = sdf.format(new Date());
+
+            InetAddress addr = InetAddress.getLocalHost();
+            String ipStr = addr.getHostAddress();
+
+            // 用户标识
+            request.setOpenid(openid);
+            // 商品ID
+            request.setProductId(productId);
+
             // 设备号
             request.setDeviceInfo("");
             // 随机字符串
@@ -51,37 +85,33 @@ public class PayController {
             // 签名
             request.setSign("");
             // 商品描述
-            request.setBody("");
+            request.setBody("商品描述test");
             // 商品详情
-            request.setDetail("");
+            request.setDetail("商品详情test");
             // 附加数据
             request.setAttach("");
             // 商户订单号
-            request.setOutTradeNo("");
+            request.setOutTradeNo(String.valueOf(globalUniqueId));
             // 币种
             request.setFeeType("CNY");
             // 金额
             request.setTotalFee(100);
             // 终端IP
-            request.setSpbillCreateIp("");
+            request.setSpbillCreateIp(ipStr);
             // 交易起始时间
-            request.setTimeStart("");
+            request.setTimeStart(dateStr);
             // 交易结束时间
-            request.setTimeExpire("");
+            request.setTimeExpire(dateStr);
             // 订单优惠标记
             request.setGoodsTag("");
-            // 通知地址
-            request.setNotifyUrl("");
             // 交易类型
             request.setTradeType("JSAPI");
-            // 商品Id
-            request.setProductId("");
             // 执行支付方式
             request.setLimitPay("no_credit");
-            // 用户标识
-            request.setOpenid("");
             // 场景信息
             request.setSceneInfo("");
+
+
             WxPayUnifiedOrderResult orderResult = wxPayService.unifiedOrder(request);
         } catch (Exception ex) {
             ex.printStackTrace();
