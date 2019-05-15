@@ -140,7 +140,7 @@ public class PayController {
      * @param request
      * @param response
      */
-    @GetMapping("/payCallback")
+    @PostMapping("/payCallback")
     public void payCallback(HttpServletRequest request, HttpServletResponse response) {
 
         System.out.println("payCallback.notityXml.into...");
