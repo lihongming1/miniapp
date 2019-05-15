@@ -164,21 +164,11 @@ public class PayController {
             System.out.println("payCallback.wxPayOrderNotifyResult=" + wxPayOrderNotifyResult == null ? "null" : JSON.toJSONString(wxPayOrderNotifyResult));
 
             if ("SUCCESS".equals(wxPayOrderNotifyResult.getResultCode())) {
-                Map<String, String> params = wxPayOrderNotifyResult.toMap();
 
-                System.out.println("payCallback.params=" + params == null ? "null" : JSON.toJSONString(params));
+                try {
+                    // 验证返回结果，验证签名
+                    wxPayOrderNotifyResult.checkResult(wxPayService, applicationConfig.signType, true);
 
-                // 签名类型
-                String signType = applicationConfig.signType;
-
-                System.out.println("payCallback.signType=" + signType);
-
-                // 校验签名是否正确
-                boolean check = SignUtils.checkSign(params, signType, null);
-
-                System.out.println("payCallback.check=" + check);
-
-                if (check) {
                     // 商户订单号
                     String outTradeNo = wxPayOrderNotifyResult.getOutTradeNo();
 
@@ -199,7 +189,11 @@ public class PayController {
                         //返回
                         writer.print(buffer.toString());
                     }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    throw ex;
                 }
+
             }
 
         } catch (Exception ex) {
