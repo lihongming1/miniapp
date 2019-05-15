@@ -2,6 +2,7 @@ package com.wx.miniapp.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
+import com.github.binarywang.wxpay.bean.request.WxPayRefundRequest;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryResult;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
@@ -218,17 +219,37 @@ public class PayController {
         }
     }
 
+    /**
+     * 查询订单
+     * @param outTradeNo
+     * @return
+     */
     @GetMapping("/orderQuery")
-    public ResponseEntity orderQuery(@RequestParam String outTradeNo){
+    public ResponseEntity orderQuery(@RequestParam String outTradeNo) {
 
-        try{
-            WxPayOrderQueryResult result = wxPayService.queryOrder(null,outTradeNo);
+        try {
+            WxPayOrderQueryResult result = wxPayService.queryOrder(null, outTradeNo);
             return ResponseEntity.status(HttpStatus.OK).body(result);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
         return ResponseEntity.status(-1).build();
-    };
+    }
+
+    /**
+     * 申请退款
+     * @return
+     */
+    @PostMapping("/refund")
+    public ResponseEntity refund() {
+        WxPayRefundRequest request = new WxPayRefundRequest();
+        try {
+            wxPayService.refund(request);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
 
 }
