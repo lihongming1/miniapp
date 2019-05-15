@@ -33,6 +33,8 @@ public class ApplicationConfig {
     @Value("${wx.pay.signKey}")
     public String signKey;
 
+    @Value("${wx.pay.refund.notifyUrl}")
+    public String refundNotifyUrl;
 
 
 }

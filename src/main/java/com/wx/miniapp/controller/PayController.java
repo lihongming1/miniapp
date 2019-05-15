@@ -5,6 +5,7 @@ import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.request.WxPayRefundRequest;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryResult;
+import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.github.binarywang.wxpay.util.SignUtils;
@@ -221,6 +222,7 @@ public class PayController {
 
     /**
      * 查询订单
+     *
      * @param outTradeNo
      * @return
      */
@@ -239,17 +241,46 @@ public class PayController {
 
     /**
      * 申请退款
+     *
      * @return
      */
-    @PostMapping("/refund")
-    public ResponseEntity refund() {
+    @GetMapping("/refund")
+    public ResponseEntity refund(@RequestParam String outTradeNo) {
         WxPayRefundRequest request = new WxPayRefundRequest();
+
+        long globalUniqueId = snowflakeIdWorker.nextId();
+
         try {
-            wxPayService.refund(request);
+            // 小程序ID
+            request.setAppid(applicationConfig.appid);
+            // 商户号
+            request.setMchId(applicationConfig.mchId);
+            // 随机字符串
+            request.setNonceStr(UUID.randomUUID().toString().replaceAll("-", ""));
+            // 签名类型
+            request.setSignType(applicationConfig.signType);
+            // 商户订单号
+            request.setOutTradeNo(outTradeNo);
+            // 商户退款单号
+            request.setOutRefundNo(String.valueOf(globalUniqueId));
+            // 订单金额
+            request.setTotalFee(1);
+            // 退款金额
+            request.setRefundFee(1);
+            // 货币种类
+            request.setRefundFeeType("CNY");
+            // 退款原因
+            request.setRefundDesc("");
+            // 退款资金来源
+            request.setRefundAccount("");
+            // 退款结果通知url
+            request.setNotifyUrl(applicationConfig.refundNotifyUrl);
+            WxPayRefundResult result = wxPayService.refund(request);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return null;
+        return ResponseEntity.status(-1).build();
     }
 
 }
