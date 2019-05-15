@@ -295,7 +295,7 @@ public class PayController {
     @PostMapping("/refundCallback")
     public void refundCallback(HttpServletRequest request, HttpServletResponse response) {
 
-        System.out.println("payCallback.notityXml.into...");
+        System.out.println("refundCallback.into...");
 
         String inputLine = "";
         String notityXml = "";
@@ -310,6 +310,8 @@ public class PayController {
             }
 
             WxPayRefundNotifyResult wxPayRefundNotifyResult = wxPayService.parseRefundNotifyResult(notityXml);
+
+            System.out.println("refundCallback.wxPayRefundNotifyResult="+JSON.toJSONString(wxPayRefundNotifyResult));
 
             if ("SUCCESS".equals(wxPayRefundNotifyResult.getResultCode())) {
 
