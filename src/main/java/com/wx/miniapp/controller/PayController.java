@@ -242,7 +242,9 @@ public class PayController {
 
     /**
      * 申请退款
-     *
+     * 参考：
+     * https://blog.csdn.net/x1032019725/article/details/83376523
+     * https://blog.csdn.net/maqingbin8888/article/details/83505771
      * @return
      */
     @GetMapping("/refund")
