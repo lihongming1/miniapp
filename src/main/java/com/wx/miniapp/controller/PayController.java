@@ -245,6 +245,7 @@ public class PayController {
      * 参考：
      * https://blog.csdn.net/x1032019725/article/details/83376523
      * https://blog.csdn.net/maqingbin8888/article/details/83505771
+     *
      * @return
      */
     @GetMapping("/refund")
@@ -311,25 +312,19 @@ public class PayController {
 
             WxPayRefundNotifyResult wxPayRefundNotifyResult = wxPayService.parseRefundNotifyResult(notityXml);
 
-            System.out.println("refundCallback.wxPayRefundNotifyResult="+JSON.toJSONString(wxPayRefundNotifyResult));
-
-            if ("SUCCESS".equals(wxPayRefundNotifyResult.getResultCode())) {
-
-                try {
-                    // 验证返回结果，验证签名
-                    wxPayRefundNotifyResult.checkResult(wxPayService, applicationConfig.signType, true);
-                    WxPayRefundNotifyResult.ReqInfo reqInfo = wxPayRefundNotifyResult.getReqInfo();
-                    // 商户订单号
-                    String outTradeNo = reqInfo.getOutTradeNo();
-                    // 退款状态
-                    String refundStatus = reqInfo.getRefundStatus();
-                    // 修改退款状态
-                    System.out.println("refundCallback.reqInfo=" + JSON.toJSONString(reqInfo));
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    throw ex;
-                }
-
+            try {
+                // 验证返回结果，验证签名
+                wxPayRefundNotifyResult.checkResult(wxPayService, applicationConfig.signType, true);
+                WxPayRefundNotifyResult.ReqInfo reqInfo = wxPayRefundNotifyResult.getReqInfo();
+                System.out.println("refundCallback.reqInfo=" + JSON.toJSONString(reqInfo));
+                // 商户订单号
+                String outTradeNo = reqInfo.getOutTradeNo();
+                // 退款状态
+                String refundStatus = reqInfo.getRefundStatus();
+                // 修改退款状态
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                throw ex;
             }
 
         } catch (Exception ex) {
