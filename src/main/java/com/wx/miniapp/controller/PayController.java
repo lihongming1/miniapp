@@ -2,6 +2,7 @@ package com.wx.miniapp.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
+import com.github.binarywang.wxpay.bean.notify.WxPayRefundNotifyResult;
 import com.github.binarywang.wxpay.bean.request.WxPayRefundRequest;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryResult;
@@ -281,6 +282,72 @@ public class PayController {
             ex.printStackTrace();
         }
         return ResponseEntity.status(-1).build();
+    }
+
+    /**
+     * 退款回调
+     *
+     * @param request
+     * @param response
+     */
+    @PostMapping("/refundCallback")
+    public void refundCallback(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("payCallback.notityXml.into...");
+
+        String inputLine = "";
+        String notityXml = "";
+        BufferedReader reader = null;
+        PrintWriter writer = null;
+        try {
+            reader = request.getReader();
+            writer = response.getWriter();
+
+            while ((inputLine = reader.readLine()) != null) {
+                notityXml += inputLine;
+            }
+
+            WxPayRefundNotifyResult wxPayRefundNotifyResult = wxPayService.parseRefundNotifyResult(notityXml);
+
+            if ("SUCCESS".equals(wxPayRefundNotifyResult.getResultCode())) {
+
+                try {
+                    // 验证返回结果，验证签名
+                    wxPayRefundNotifyResult.checkResult(wxPayService, applicationConfig.signType, true);
+                    WxPayRefundNotifyResult.ReqInfo reqInfo = wxPayRefundNotifyResult.getReqInfo();
+                    // 商户订单号
+                    String outTradeNo = reqInfo.getOutTradeNo();
+                    // 退款状态
+                    String refundStatus = reqInfo.getRefundStatus();
+                    // 修改退款状态
+                    System.out.println("refundCallback.reqInfo=" + JSON.toJSONString(reqInfo));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    throw ex;
+                }
+
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+            if (writer != null) {
+                try {
+                    writer.close();
+                    ;
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
     }
 
 }
