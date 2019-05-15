@@ -142,6 +142,9 @@ public class PayController {
      */
     @GetMapping("/payCallback")
     public void payCallback(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("payCallback.notityXml.into...");
+
         String inputLine = "";
         String notityXml = "";
         BufferedReader reader = null;
@@ -154,18 +157,38 @@ public class PayController {
                 notityXml += inputLine;
             }
 
+            System.out.println("payCallback.notityXml=" + notityXml);
+
             WxPayOrderNotifyResult wxPayOrderNotifyResult = wxPayService.parseOrderNotifyResult(notityXml);
+
+            System.out.println("payCallback.wxPayOrderNotifyResult=" + wxPayOrderNotifyResult == null ? "null" : JSON.toJSONString(wxPayOrderNotifyResult));
+
             if ("SUCCESS".equals(wxPayOrderNotifyResult.getResultCode())) {
                 Map<String, String> params = wxPayOrderNotifyResult.toMap();
+
+                System.out.println("payCallback.params=" + params == null ? "null" : JSON.toJSONString(params));
+
                 // 签名类型
                 String signType = applicationConfig.signType;
+
+                System.out.println("payCallback.signType=" + signType);
+
                 // 校验签名是否正确
                 boolean check = SignUtils.checkSign(params, signType, null);
+
+                System.out.println("payCallback.check=" + check);
+
                 if (check) {
                     // 商户订单号
                     String outTradeNo = wxPayOrderNotifyResult.getOutTradeNo();
+
+                    System.out.println("payCallback.outTradeNo=" + outTradeNo);
+
                     // 更新支付状态
                     boolean callbackResult = payBusinessService.payCallback(outTradeNo);
+
+                    System.out.println("payCallback.callbackResult=" + callbackResult);
+
                     if (callbackResult) {
                         // 返回微信段成功， 否则会一直询问 咱们服务器 是否回调成功
                         StringBuffer buffer = new StringBuffer();
