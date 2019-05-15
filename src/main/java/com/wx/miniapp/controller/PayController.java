@@ -322,6 +322,14 @@ public class PayController {
                 // 退款状态
                 String refundStatus = reqInfo.getRefundStatus();
                 // 修改退款状态
+                // 返回微信段成功， 否则会一直询问 咱们服务器 是否回调成功
+                StringBuffer buffer = new StringBuffer();
+                buffer.append("<xml>");
+                buffer.append("<return_code>SUCCESS</return_code>");
+                buffer.append("<return_msg>OK</return_msg>");
+                buffer.append("</xml>");
+                //返回
+                writer.print(buffer.toString());
             } catch (Exception ex) {
                 ex.printStackTrace();
                 throw ex;
