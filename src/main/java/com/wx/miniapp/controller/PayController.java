@@ -3,6 +3,7 @@ package com.wx.miniapp.controller;
 import com.alibaba.fastjson.JSON;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
+import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryResult;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.github.binarywang.wxpay.util.SignUtils;
@@ -216,5 +217,18 @@ public class PayController {
             }
         }
     }
+
+    @GetMapping("/orderQuery")
+    public ResponseEntity orderQuery(@RequestParam String outTradeNo){
+
+        try{
+            WxPayOrderQueryResult result = wxPayService.queryOrder(null,outTradeNo);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+        return ResponseEntity.status(-1).build();
+    };
 
 }
