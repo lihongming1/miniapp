@@ -241,7 +241,7 @@ public class PayController {
     }
 
     /**
-     * 申请退款
+     * 申请退款-需要配置证书路径
      * 参考：
      * https://blog.csdn.net/x1032019725/article/details/83376523
      * https://blog.csdn.net/maqingbin8888/article/details/83505771
