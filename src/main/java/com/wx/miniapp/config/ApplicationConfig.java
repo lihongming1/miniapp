@@ -36,5 +36,8 @@ public class ApplicationConfig {
     @Value("${wx.pay.refund.notifyUrl}")
     public String refundNotifyUrl;
 
+    @Value("${wx.miniapp.keyPath}")
+    public String keyPath;
+
 
 }
