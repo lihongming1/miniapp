@@ -15,7 +15,7 @@ public class UploadExecutor implements UploadUtil {
 
     private static final UploadExecutor executor = new UploadExecutor();
 
-    public static UploadExecutor build(UploadConfig uploadConfig) {
+    public static UploadUtil build(UploadConfig uploadConfig) {
         executor.setUploadConfig(uploadConfig);
         return executor;
     }

@@ -11,6 +11,7 @@ import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import com.wx.miniapp.common.util.qiniu.UploadConfig;
 import com.wx.miniapp.common.util.qiniu.UploadExecutor;
+import com.wx.miniapp.common.util.qiniu.UploadUtil;
 import com.wx.miniapp.config.ApplicationConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,8 +63,8 @@ public class CodeController {
 
         // 上传七牛云
         UploadConfig uploadConfig = new UploadConfig(applicationConfig);
-        UploadExecutor executor = UploadExecutor.build(uploadConfig);
-        String imagePath = executor.uploadFile(bytes);
+        UploadUtil uploadUtil = UploadExecutor.build(uploadConfig);
+        String imagePath = uploadUtil.uploadFile(bytes);
         System.out.println(imagePath);
 
         OutputStream outputStream = null;
