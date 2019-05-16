@@ -1,9 +1,11 @@
 package com.wx.miniapp.config.wxjava;
 
 import cn.binarywang.wx.miniapp.api.WxMaMsgService;
+import cn.binarywang.wx.miniapp.api.WxMaQrcodeService;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.api.WxMaUserService;
 import cn.binarywang.wx.miniapp.api.impl.WxMaMsgServiceImpl;
+import cn.binarywang.wx.miniapp.api.impl.WxMaQrcodeServiceImpl;
 import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
 import cn.binarywang.wx.miniapp.api.impl.WxMaUserServiceImpl;
 import cn.binarywang.wx.miniapp.config.WxMaInMemoryConfig;
@@ -31,6 +33,17 @@ public class WxMiniappConfig {
         wxPayConfig.setMchKey(applicationConfig.signKey);
         wxPayConfig.setKeyPath(applicationConfig.keyPath);
         return wxPayConfig;
+    }
+
+    @Bean
+    public WxMaQrcodeService wxMaQrcodeService(){
+        WxMaService wxMaService = new WxMaServiceImpl();
+        WxMaInMemoryConfig wxMaConfig = new WxMaInMemoryConfig();
+        wxMaConfig.setAppid(applicationConfig.appid);
+        wxMaConfig.setSecret(applicationConfig.secret);
+        wxMaService.setWxMaConfig(wxMaConfig);
+        WxMaQrcodeService wxMaQrcodeService = new WxMaQrcodeServiceImpl(wxMaService);
+        return wxMaQrcodeService;
     }
 
     @Bean
