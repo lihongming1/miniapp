@@ -71,6 +71,12 @@
 			<version>3.3.8.B</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.qiniu</groupId>
+			<artifactId>qiniu-java-sdk</artifactId>
+			<version>7.2.18</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

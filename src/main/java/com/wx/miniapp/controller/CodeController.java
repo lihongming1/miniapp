@@ -2,6 +2,14 @@ package com.wx.miniapp.controller;
 
 import cn.binarywang.wx.miniapp.api.WxMaQrcodeService;
 import cn.binarywang.wx.miniapp.bean.WxMaCodeLineColor;
+import com.alibaba.fastjson.JSON;
+import com.qiniu.common.Zone;
+import com.qiniu.http.Response;
+import com.qiniu.storage.Configuration;
+import com.qiniu.storage.UploadManager;
+import com.qiniu.storage.model.DefaultPutRet;
+import com.qiniu.util.Auth;
+import com.wx.miniapp.config.ApplicationConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +28,9 @@ public class CodeController {
 
     @Autowired
     private WxMaQrcodeService wxMaQrcodeService;
+
+    @Autowired
+    private ApplicationConfig applicationConfig;
 
     /**
      * 生产二维码
@@ -47,6 +58,10 @@ public class CodeController {
             ex.printStackTrace();
         }
 
+        // 上传七牛云
+        String imagePath = uploadImage(bytes);
+        System.out.println(imagePath);
+
         OutputStream outputStream = null;
         try {
             outputStream = response.getOutputStream();
@@ -64,10 +79,27 @@ public class CodeController {
             }
         }
 
-        // 生成图片，保存到图片服务器
-        // 保存图片连接，到数据库，图片表
+    }
 
-
+    /**
+     * 上传七牛云
+     *
+     * @param bytes
+     * @return 图片路径
+     */
+    public String uploadImage(byte[] bytes) {
+        Configuration cfg = new Configuration();
+        UploadManager uploadManager = new UploadManager(cfg);
+        Auth auth = Auth.create(applicationConfig.qiniuAccessKey, applicationConfig.qiniuSecretkey);
+        String token = auth.uploadToken(applicationConfig.qiniuBucketName);
+        try {
+            Response response = uploadManager.put(bytes, null, token);
+            DefaultPutRet putRet = JSON.parseObject(response.bodyString(), DefaultPutRet.class);
+            return "http://" + applicationConfig.qiniuBucketHost + "/" + putRet.key;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 
 

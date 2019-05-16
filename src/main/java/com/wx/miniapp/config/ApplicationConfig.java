@@ -39,5 +39,17 @@ public class ApplicationConfig {
     @Value("${wx.miniapp.keyPath}")
     public String keyPath;
 
+    @Value("${qiniu.access.key}")
+    public String qiniuAccessKey;
+
+    @Value("${qiniu.secret.key}")
+    public String qiniuSecretkey;
+
+    @Value("${qiniu.bucket.name}")
+    public String qiniuBucketName;
+
+    @Value("${qiniu.bucket.host}")
+    public String qiniuBucketHost;
+
 
 }
