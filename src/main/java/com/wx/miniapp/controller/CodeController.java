@@ -9,6 +9,8 @@ import com.qiniu.storage.Configuration;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
+import com.wx.miniapp.common.util.qiniu.UploadConfig;
+import com.wx.miniapp.common.util.qiniu.UploadExecutor;
 import com.wx.miniapp.config.ApplicationConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,7 +61,9 @@ public class CodeController {
         }
 
         // 上传七牛云
-        String imagePath = uploadImage(bytes);
+        UploadConfig uploadConfig = new UploadConfig(applicationConfig);
+        UploadExecutor executor = UploadExecutor.build(uploadConfig);
+        String imagePath = executor.uploadFile(bytes);
         System.out.println(imagePath);
 
         OutputStream outputStream = null;
@@ -80,27 +84,5 @@ public class CodeController {
         }
 
     }
-
-    /**
-     * 上传七牛云
-     *
-     * @param bytes
-     * @return 图片路径
-     */
-    public String uploadImage(byte[] bytes) {
-        Configuration cfg = new Configuration();
-        UploadManager uploadManager = new UploadManager(cfg);
-        Auth auth = Auth.create(applicationConfig.qiniuAccessKey, applicationConfig.qiniuSecretkey);
-        String token = auth.uploadToken(applicationConfig.qiniuBucketName);
-        try {
-            Response response = uploadManager.put(bytes, null, token);
-            DefaultPutRet putRet = JSON.parseObject(response.bodyString(), DefaultPutRet.class);
-            return "http://" + applicationConfig.qiniuBucketHost + "/" + putRet.key;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return null;
-    }
-
 
 }
