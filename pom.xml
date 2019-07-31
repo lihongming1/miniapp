@@ -59,6 +59,10 @@
 			<version>1.2.58</version>
 		</dependency>
 
+		<!--
+		使用框架官网
+		https://github.com/wechat-group/WxJava
+		-->
 		<dependency>
 			<groupId>com.github.binarywang</groupId>
 			<artifactId>weixin-java-miniapp</artifactId>
